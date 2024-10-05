@@ -1,26 +1,45 @@
 
-### Запуск тестов 
-1) Открыть проект в IntelliJ IDEA;
-2) Создать контейнеры в скопированном проекте `docker-compose up -d`;
+Руководство по подключению базы данных и запуску SUT
+
+Откройте склонированный проект в среде разработки Intellij IDEA.
 
 
-#### Для проверки MySQL:
-1) Запустить jar-файл с базой данных MySQL командой: `java "-Dspring.datasource.url=jdbc:mysql://185.119.57.126:3306/app" -jar artifacts/aqa-shop.jar`;
+Чтобы запустить контейнеры с MySQL, PostgreSQL и Node.js, выполните команду:
 
-2) Убедиться в готовности системы. Приложение должно быть доступно по адресу: `http://localhost:8080/`;
+docker-compose up -d --force-recreate
 
-3) В новой вкладке терминала запустить тесты командой: `./gradlew clean test "-Ddb.url=jdbc:mysql://185.119.57.126:3306/app"` ;
 
-4) Для создания отчета запустить команду:`./gradlew allureServe`, `./gradlew allureReport`
+Запуск SUT:
 
-#### Для проверки PostgreSQL:
-1) В новой вкладке терминала запустить тестируемое приложение командой: `java "-Dspring.datasource.url=jdbc:postgresql://185.119.57.126:5432/app" -jar artifacts/aqa-shop.jar`;
+Для MySQL выполните следующую команду в терминале:
+ 
+ java -Dspring.datasource.url=jdbc:mysql://localhost:3306/app -jar artifacts/aqa-shop.jar
 
-2) Убедиться в готовности системы. Приложение должно быть доступно по адресу: `http://localhost:8080/`;
+Для PostgreSQL используйте следующую команду в терминале:
+ 
+ java -Dspring.datasource.url=jdbc:postgresql://localhost:5432/app -jar artifacts/aqa-shop.jar
 
-3) В новой вкладке терминала запустить тесты командой: `.\gradlew clean test "-Ddb.url=jdbc:postgresql://185.119.57.126:5432/app"`  ;
+Запуск тестов (с использованием Allure):
 
-4) Для создания отчета запустить команду: `./gradlew allureServe`,`./gradlew allureReport`
+Для выполнения тестов с MySQL выполните команду:
+ 
+ gradlew clean test -Ddb.url=jdbc:mysql://localhost:3306/app allureReport
 
- - Для остановки приложений использовать команду `Cntrl C`.
-- Для удаления контейнеров использовать команду `docker-compose down`
+Для запуска тестов с PostgreSQL выполните команду:
+ 
+ gradlew clean test -Ddb.url=jdbc:postgresql://localhost:5432/app allureReport 
+
+
+
+Откройте в вашем веб-браузере (например, Google Chrome) ссылку:
+
+http://localhost:8080
+
+
+Чтобы получить отчет Allure в браузере, выполните команду:
+
+gradlew allureServe
+
+
+По завершении тестов остановите работу приложения с помощью сочетания клавиш Ctrl+C и завершите работу контейнеров, выполнив команду:
+docker-compose down
